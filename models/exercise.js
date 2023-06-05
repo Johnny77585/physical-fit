@@ -14,7 +14,6 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Exercise.init({
-    exerciseId: DataTypes.INTEGER,
     name: DataTypes.STRING,
     BodyPart: DataTypes.STRING,
     Photo: DataTypes.STRING

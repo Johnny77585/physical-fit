@@ -14,7 +14,6 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   DailyTraining.init({
-    DailyTrainingId: DataTypes.INTEGER,
     date: DataTypes.DATE,
     sets: DataTypes.INTEGER,
     reps: DataTypes.INTEGER,
