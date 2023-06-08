@@ -18,8 +18,9 @@ module.exports = {
       password: {
         type: Sequelize.STRING
       },
-      role_id: {
-        type: Sequelize.INTEGER
+      is_admin: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
       },
       info: {
         type: Sequelize.STRING
