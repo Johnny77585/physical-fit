@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate (models) {
-      Exercise.belongsTo(models.BodyPart, { foreignKey: 'bodypartId' })
+      Exercise.belongsTo(models.Bodypart, { foreignKey: 'bodypartId' })
     }
   }
   Exercise.init({
