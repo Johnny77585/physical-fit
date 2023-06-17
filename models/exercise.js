@@ -18,7 +18,8 @@ module.exports = (sequelize, DataTypes) => {
     Photo: DataTypes.STRING
   }, {
     sequelize,
-    modelName: 'Exercise'
+    modelName: 'Exercise',
+    underscored: true
   })
   return Exercise
 }
