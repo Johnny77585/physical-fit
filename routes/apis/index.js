@@ -7,6 +7,7 @@ const passport = require('../../config/passport')
 const userController = require('../../controllers/apis/user-controller')
 
 router.post('/signin', passport.authenticate('local', { session: false }), userController.signIn)
+router.post('/signup', userController.signUp)
 router.get('/exercises', authenticated, exerciseController.getExercises)
 router.use('/', apiErrorHandler)
 module.exports = router
