@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs')
 const { User } = require('../../models')
+const axios = require('axios')
 const userController = {
   signUpPage: (req, res) => {
     res.render('signup')
@@ -26,9 +27,21 @@ const userController = {
     res.render('signin')
   },
   signIn: (req, res) => {
-    req.flash('success_messages', '成功登入！')
-    res.redirect('/exercises')
+    const { email, password } = req.body
+    axios.post('http://localhost:3000/api/signin', {
+      email,
+      password
+    })
+      .then(response => {
+        const token = response.data.data.token
+        res.cookie('token', token, { httpOnly: true, expires: new Date(Date.now() + 3600000 * 24 * 7) })
+        res.redirect('/exercises')
+      })
+      .catch(error => {
+        console.log(error)
+      })
   },
+
   logout: (req, res) => {
     req.flash('success_messages', '登出成功！')
     req.logout()

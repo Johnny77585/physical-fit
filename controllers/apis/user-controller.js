@@ -15,8 +15,11 @@ const userController = {
           user: userData
         }
       })
-    } catch (err) {
-      next(err)
+    } catch {
+      res.status(500).json({
+        error: true,
+        message: 'Server error'
+      })
     }
   },
   signUp: (req, res, next) => {

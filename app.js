@@ -13,6 +13,7 @@ const passport = require('./config/passport')
 const { getUser } = require('./helpers/auth-helpers')
 const ejsHelpers = require('./helpers/ejs-helpers')
 const { pages, apis } = require('./routes')
+const cookieParser = require('cookie-parser')
 
 // 使用EJS做模板
 app.use(express.static('./static'))
@@ -29,6 +30,7 @@ app.use(function (req, res, next) {
 })
 app.use(methodOverride('_method'))
 app.use(passport.session())
+app.use(cookieParser())
 app.use(flash())
 app.use((req, res, next) => {
   res.locals.success_messages = req.flash('success_messages') // 設定 success_msg 訊息
