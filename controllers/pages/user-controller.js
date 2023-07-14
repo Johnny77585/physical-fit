@@ -44,6 +44,7 @@ const userController = {
 
   logout: (req, res) => {
     req.flash('success_messages', '登出成功！')
+    res.clearCookie('token', '', { httpOnly: true, expires: new Date(0) })
     req.logout()
     res.redirect('/signin')
   }

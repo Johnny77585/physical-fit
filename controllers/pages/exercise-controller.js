@@ -9,7 +9,7 @@ async function getExercises (req, res) {
       }
     })
     const exercises = response.data
-    res.json({ exercises })
+    res.render('exercises', { exercises })
   } catch (error) {
     console.log(error)
     res.status(500).json({ error: 'Failed to get exercises' })
