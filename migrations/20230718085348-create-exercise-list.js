@@ -12,7 +12,7 @@ module.exports = {
       exercise_id: {
         type: Sequelize.INTEGER
       },
-      listId: {
+      list_id: {
         type: Sequelize.INTEGER
       },
       created_at: {

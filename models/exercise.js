@@ -13,7 +13,11 @@ module.exports = (sequelize, DataTypes) => {
       Exercise.belongsTo(models.Bodypart, { foreignKey: 'bodypartId' })
       Exercise.belongsTo(models.User, { foreignKey: 'userId' })
       Exercise.hasMany(models.Set, { foreignKey: 'exerciseId' })
-      Exercise.hasMany(models.Exerciselist, { foreignKey: 'exerciseId' })
+      Exercise.belongsToMany(models.List, {
+        through: models.ExerciseList,
+        foreignKey: 'exerciseId',
+        as: 'ExerciseListed'
+      })
     }
   }
   Exercise.init({

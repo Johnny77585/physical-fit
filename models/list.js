@@ -10,9 +10,13 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate (models) {
-      List.belongsTo(models.date, { foreignKey: 'dateId' })
+      List.belongsTo(models.Date, { foreignKey: 'dateId' })
       List.belongsTo(models.User, { foreignKey: 'userId' })
-      List.hasMany(models.Exerciselist, { foreignKey: 'listId' })
+      List.belongsToMany(models.Exercise, {
+        through: models.ExerciseList,
+        foreignKey: 'listId',
+        as: 'ListedExercise'
+      })
     }
   }
   List.init({
