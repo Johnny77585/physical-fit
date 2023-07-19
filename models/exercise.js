@@ -11,6 +11,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate (models) {
       Exercise.belongsTo(models.Bodypart, { foreignKey: 'bodypartId' })
+      Exercise.belongsTo(models.User, { foreignKey: 'userId' })
+      Exercise.hasMany(models.Set, { foreignKey: 'exerciseId' })
+      Exercise.hasMany(models.Exerciselist, { foreignKey: 'exerciseId' })
     }
   }
   Exercise.init({
