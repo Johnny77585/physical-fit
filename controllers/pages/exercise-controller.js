@@ -1,19 +1,19 @@
 const axios = require('axios')
 
-async function getExercises (req, res) {
+async function getBodyparts (req, res) {
   try {
     const bearerToken = req.cookies.token
-    const response = await axios.get('http://localhost:3000/api/exercises', {
+    const response = await axios.get('http://localhost:3000/api/bodyparts', {
       headers: {
         Authorization: `Bearer ${bearerToken}`
       }
     })
-    const exercises = response.data
-    res.render('exercises', { exercises })
+    const bodyparts = response.data
+    res.render('exercises', { bodyparts })
   } catch (error) {
     console.log(error)
     res.status(500).json({ error: 'Failed to get exercises' })
   }
 }
 
-module.exports = { getExercises }
+module.exports = { getBodyparts }

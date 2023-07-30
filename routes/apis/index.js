@@ -8,7 +8,8 @@ const exerciseController = require('../../controllers/apis/exercise-controller')
 
 router.post('/signin', passport.authenticate('local', { session: false }), userController.signIn)
 router.post('/signup', userController.signUp)
-router.get('/exercises', authenticated, exerciseController.getExercises)
+router.get('/exercises', authenticated, exerciseController.getBodyparts)
+router.get('/bodyparts', authenticated, exerciseController.getBodyparts)
 
 router.use('/', apiErrorHandler)
 module.exports = router

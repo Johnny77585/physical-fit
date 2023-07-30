@@ -15,6 +15,21 @@ const exerciseController = {
       console.log(err)
       res.status(500).send('Internal Server Error')
     })
+  },
+  getBodyparts: (req, res) => {
+    return Bodypart.findAll({
+      include: Exercise,
+      nest: true,
+      raw: true
+    }).then(bodyparts => {
+      const data = bodyparts.map(e => ({
+        ...e
+      }))
+      res.json(data)
+    }).catch(err => {
+      console.log(err)
+      res.status(500).send('Internal Server Error')
+    })
   }
 }
 
