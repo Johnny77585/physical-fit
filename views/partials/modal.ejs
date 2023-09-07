@@ -1,0 +1,37 @@
+  <!-- modal -->
+<div class="modal fade" id="customExerciseModal" tabindex="-1" aria-labelledby="customExerciseModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="customExerciseModalLabel">新增自選動作</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/exercises" method="POST" enctype="multipart/form-data">
+          <!-- 上傳圖片 -->
+          <div class="form-row mb-3">
+            <label for="formFile" class="form-label">上傳圖片</label>
+            <input type="file" class="form-control" id="photo" name="photo">
+          </div>
+          <!-- 選擇種類 -->
+          <div class="mb-3">
+            <label for="exerciseCategory" class="form-label">選擇種類</label>
+            <select class="form-select" id="exerciseCategory">
+              <option value="category1">1</option>
+              <option value="category2">2</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="exerciseName" class="form-label">自定義名稱</label>
+            <input type="text" class="form-control" id="exerciseName">
+          </div>
+        </form>
+      </div>
+      <!-- 底部 -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+        <button type="button" class="btn btn-primary">保存</button>
+      </div>
+    </div>
+  </div>
+</div>
