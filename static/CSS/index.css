@@ -15,11 +15,12 @@
   border-radius: 15px 15px 0px 0px;
 }
 .exercisesFrame {
-  width: 100%;
-  height: 655px;
-  margin: auto;
-  background-color: #ede0d4;
-  border-radius: 0px 0px 15px 15px;
+    width: 100%;
+    height: 655px;
+    margin: auto;
+    background-color: #ede0d4;
+    border-radius: 0px 0px 15px 15px;
+    display: flex;
 }
 .exercises,
 .lists,
@@ -68,7 +69,7 @@
     color:#4d311e;
 }
 .list {
-  width: 300px;
+  width: 20%;
   background-color: #ede0d4;
   position: relative;
 }
@@ -84,7 +85,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 260px;
+  width: 80%;
   line-height: 40px;
   margin: 20px;
   border-radius: 10px;
@@ -102,4 +103,34 @@
   color: #e94b39;
   background: #faebd7;
   font-weight: bold;
+}
+.exerciseContent {
+  width: 100%;
+  height: auto;
+  background-color: #ede0d4;
+  border-radius: 5px;
+  box-shadow: 10px 10px 20px #9f6a47;
+  overflow-y: scroll;
+}
+/* postFrame scrollbar style */
+.exerciseContent::-webkit-scrollbar {
+  width: 6px;
+}
+
+.exerciseContent::-webkit-scrollbar-thumb {
+  background-color: #f0d4bc;
+  border: 1px solid #922c21;
+  border-radius: 15px;
+}
+
+.exerciseContent::-webkit-scrollbar-track-piece:end {
+  margin-bottom: 3px;
+}
+.exerciseContent .row {
+    margin: 10px;
+}
+/* 卡片背景色 */
+.custom-bg {
+  background-color: #FFA500;
+  color: #fff;
 }

@@ -7,7 +7,7 @@ const JwtSecret = process.env.JWT_SECRET
 const exerciseController = {
   getExercises: (req, res) => {
     const token = req.cookies.token
-    const bodypartId = req.query.bodypart
+    const bodypartName = req.query.bodypart
     if (token) {
       const decodedToken = jwt.verify(token, JwtSecret)
       const userId = decodedToken.id
@@ -17,10 +17,10 @@ const exerciseController = {
           { userId: null } // 找出原本沒有包含使用者的運動
         ]
       }
-      if (bodypartId && bodypartId !== 'all') {
+      if (bodypartName && bodypartName !== 'all') {
         whereCondition = {
           ...whereCondition,
-          '$Bodypart.id$': bodypartId
+          '$Bodypart.name$': bodypartName
         }
       }
       Exercise.findAll({
