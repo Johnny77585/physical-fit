@@ -7,18 +7,16 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form action="/exercises" method="POST" enctype="multipart/form-data">
+        <form action="/api/exercises" method="POST" enctype="multipart/form-data">
           <!-- 上傳圖片 -->
           <div class="form-row mb-3">
             <label for="formFile" class="form-label">上傳圖片</label>
             <input type="file" class="form-control" id="photo" name="photo">
           </div>
-          <!-- 選擇種類 -->
+          <!-- 選擇部位 -->
           <div class="mb-3">
-            <label for="exerciseCategory" class="form-label">選擇種類</label>
-            <select class="form-select" id="exerciseCategory">
-              <option value="category1">1</option>
-              <option value="category2">2</option>
+            <label for="bodypart" class="form-label">選擇身體部位</label>
+            <select class="form-select" id="bodypart">
             </select>
           </div>
           <div class="mb-3">

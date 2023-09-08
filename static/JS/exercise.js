@@ -1,15 +1,34 @@
 let bodypart = 'all' // 預設all
 getExercises(bodypart)
 
-const bodyparts = ['all', '胸部', '背部', '肩部', '腿部', '手部', '核心', '有氧', '其他']
+async function getBodyparts () {
+  try {
+    const response = await fetch('http://localhost:3000/api/bodyparts')
+    const bodyparts = await response.json()
+    return bodyparts
+  } catch (error) {
+    console.error('Error fetching bodyparts data:', error)
+    return []
+  }
+}
 
-// 循環每個部位做點擊的動作
-bodyparts.forEach(part => {
+async function initializeBodypartsClickHandlers () {
+  try {
+    const bodyparts = await getBodyparts()
+    bodyparts.forEach(part => {
+      setupBodypartClickHandler(part, bodyparts) // 將 bodyparts 傳遞給 setupBodypartClickHandler
+    })
+  } catch (error) {
+    console.error('Error initializing bodyparts click handlers:', error)
+  }
+}
+
+function setupBodypartClickHandler (part, allBodyparts) { // 接收所有部位的參數
   const element = document.getElementById(part)
   if (element) {
     element.addEventListener('click', () => {
       // 重置所有部位的樣式
-      bodyparts.forEach(p => {
+      allBodyparts.forEach(p => { // 使用傳遞進來的 allBodyparts
         const el = document.getElementById(p)
         if (el) {
           el.style.color = ''
@@ -27,7 +46,10 @@ bodyparts.forEach(part => {
       getExercises(bodypart)
     })
   }
-})
+}
+
+// 調用初始化函數
+initializeBodypartsClickHandlers()
 
 // 按照部位發送API，並接收資料
 async function getExercises (bodypart) {
@@ -56,3 +78,21 @@ function displayExercises (exercises) {
     exercisesList.appendChild(listItem)
   })
 }
+
+async function populateBodypartOptions () {
+  const bodypartSelect = document.getElementById('bodypart')
+  try {
+    const bodyparts = await getBodyparts()
+    bodyparts.forEach(part => {
+      const option = document.createElement('option')
+      option.value = part // 設定選項的值
+      option.textContent = part // 設定選項的顯示文字
+      bodypartSelect.appendChild(option) // 將選項添加到選擇框中
+    })
+  } catch (error) {
+    console.error('Error populating bodypart options:', error)
+  }
+}
+
+// 調用函數以填充選項
+populateBodypartOptions()
