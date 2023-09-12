@@ -1,7 +1,7 @@
 const { Exercise, Bodypart } = require('../../models')
 const jwt = require('jsonwebtoken')
 const { Op } = require('sequelize')
-// const { User } = require('../../models')
+const { localFileHandler } = require('../../helpers/file-helpers')
 
 const exerciseController = {
   getExercises: (req, res) => {
@@ -54,12 +54,11 @@ const exerciseController = {
     if (token) {
       try {
         Bodypart.findAll({
-          attributes: ['name'],
+          attributes: ['id', 'name'],
           raw: true
         })
           .then(bodyparts => {
-            const bodypartNames = bodyparts.map(bodypart => bodypart.name)
-            res.json(bodypartNames)
+            res.json(bodyparts)
           })
           .catch(err => {
             console.error(err)
@@ -75,11 +74,35 @@ const exerciseController = {
   },
   postExercise: (req, res) => {
     const token = req.cookies.token
-
     if (token) {
       try {
-        // const decodedToken = jwt.verify(token, process.env.JWT_SECRET)
-        // const userId = decodedToken.id
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET)
+        const userId = decodedToken.id
+        const { file } = req
+        localFileHandler(file)
+          .then(filePath => {
+            if (filePath) {
+              Exercise.create({
+                userId,
+                bodypartId: req.body.bodypart,
+                name: req.body.name,
+                photo: filePath || null
+              })
+                .then(exercise => {
+                  res.status(201).json({ message: 'Exercise created successfully', exercise })
+                })
+                .catch(err => {
+                  console.error(err)
+                  res.status(500).json({ message: 'Internal Server Error' })
+                })
+            } else {
+              res.status(500).json({ message: 'File processing error' })
+            }
+          })
+          .catch(err => {
+            console.error(err)
+            res.status(500).json({ message: 'File processing error' })
+          })
       } catch (err) {
         console.error(err)
         res.status(401).json({ message: 'Unauthorized' })

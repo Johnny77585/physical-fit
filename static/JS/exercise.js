@@ -1,9 +1,16 @@
 let bodypart = 'all' // 預設all
 getExercises(bodypart)
 
+// 調用函數以填充選項
+populateBodypartOptions()
+
+// 調用初始化函數
+initializeBodypartsClickHandlers()
+
+// 取得bodypart
 async function getBodyparts () {
   try {
-    const response = await fetch('http://localhost:3000/api/bodyparts')
+    const response = await fetch('/api/bodyparts')
     const bodyparts = await response.json()
     return bodyparts
   } catch (error) {
@@ -12,17 +19,21 @@ async function getBodyparts () {
   }
 }
 
+// 設定bodypart傳遞給function setupBodypartClickHandler
 async function initializeBodypartsClickHandlers () {
   try {
     const bodyparts = await getBodyparts()
-    bodyparts.forEach(part => {
-      setupBodypartClickHandler(part, bodyparts) // 將 bodyparts 傳遞給 setupBodypartClickHandler
+    const bodypartNames = bodyparts.map(part => part.name)
+    bodypartNames.unshift('all')
+    bodypartNames.forEach(part => {
+      setupBodypartClickHandler(part, bodypartNames) // 將 bodyparts 傳遞給 setupBodypartClickHandler
     })
   } catch (error) {
     console.error('Error initializing bodyparts click handlers:', error)
   }
 }
 
+// 設定點擊bodypart動作
 function setupBodypartClickHandler (part, allBodyparts) { // 接收所有部位的參數
   const element = document.getElementById(part)
   if (element) {
@@ -48,12 +59,9 @@ function setupBodypartClickHandler (part, allBodyparts) { // 接收所有部位�
   }
 }
 
-// 調用初始化函數
-initializeBodypartsClickHandlers()
-
 // 按照部位發送API，並接收資料
 async function getExercises (bodypart) {
-  const response = await fetch(`http://localhost:3000/api/exercises?bodypart=${bodypart}`)
+  const response = await fetch(`/api/exercises?bodypart=${bodypart}`)
   const exercises = await response.json()
   displayExercises(exercises)
 }
@@ -68,7 +76,7 @@ function displayExercises (exercises) {
     listItem.setAttribute('class', 'col-md-4')
     listItem.innerHTML = `
         <div class="card mb-4 shadow-sm text-bg-secondary ">
-          <img class="card-img-top" src=${exercise.Photo} alt="Card image cap" width="286px" height="180px">
+          <img class="card-img-top" src=${exercise.photo} alt="Card image cap" width="286px" height="180px">
             <div class="card-body d-flex justify-content-between">
               <p class="card-text">${exercise.name}</p>
               <button type="button" class="btn btn-outline-light">加入菜單</button>
@@ -79,20 +87,52 @@ function displayExercises (exercises) {
   })
 }
 
+// 產生modal選項
 async function populateBodypartOptions () {
   const bodypartSelect = document.getElementById('bodypart')
   try {
     const bodyparts = await getBodyparts()
     bodyparts.forEach(part => {
       const option = document.createElement('option')
-      option.value = part // 設定選項的值
-      option.textContent = part // 設定選項的顯示文字
-      bodypartSelect.appendChild(option) // 將選項添加到選擇框中
+      option.value = part.id
+      option.textContent = part.name
+      bodypartSelect.appendChild(option)
     })
   } catch (error) {
     console.error('Error populating bodypart options:', error)
   }
 }
+// modal新增exercise
+const submitButton = document.getElementById('saveExercise')
+submitButton.addEventListener('click', function (event) {
+  event.preventDefault()
 
-// 調用函數以填充選項
-populateBodypartOptions()
+  const form = document.getElementById('exerciseForm')
+
+  const formData = new FormData(form)
+  fetch('/api/exercises', {
+    method: 'POST',
+    body: formData
+  })
+    .then(response => {
+      if (response.ok) {
+        localStorage.setItem('successMessage', '新增成功')
+        window.location.href = '/exercises'
+      } else {
+        alert('新增失敗')
+      }
+    })
+    .catch(error => {
+      console.error('API error:', error)
+      alert('發生錯誤，請稍後再試。')
+    })
+})
+
+document.addEventListener('DOMContentLoaded', function () {
+  const successMessage = localStorage.getItem('successMessage')
+
+  if (successMessage) {
+    alert(successMessage)
+    localStorage.removeItem('successMessage')
+  }
+})

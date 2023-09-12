@@ -7,28 +7,28 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form action="/api/exercises" method="POST" enctype="multipart/form-data">
+        <form id="exerciseForm" enctype="multipart/form-data">
           <!-- 上傳圖片 -->
           <div class="form-row mb-3">
-            <label for="formFile" class="form-label">上傳圖片</label>
+            <label for="photo" class="form-label">上傳圖片</label>
             <input type="file" class="form-control" id="photo" name="photo">
           </div>
           <!-- 選擇部位 -->
           <div class="mb-3">
             <label for="bodypart" class="form-label">選擇身體部位</label>
-            <select class="form-select" id="bodypart">
+            <select class="form-select" id="bodypart" name="bodypart">
             </select>
           </div>
           <div class="mb-3">
-            <label for="exerciseName" class="form-label">自定義名稱</label>
-            <input type="text" class="form-control" id="exerciseName">
+            <label for="name" class="form-label">自定義名稱</label>
+            <input type="text" class="form-control" id="name" name="name">
           </div>
         </form>
       </div>
       <!-- 底部 -->
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
-        <button type="button" class="btn btn-primary">保存</button>
+        <button type="submit" class="btn btn-primary" id="saveExercise">保存</button>
       </div>
     </div>
   </div>

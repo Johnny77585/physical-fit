@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   Exercise.init({
     name: DataTypes.STRING,
-    Photo: DataTypes.STRING
+    photo: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Exercise',
