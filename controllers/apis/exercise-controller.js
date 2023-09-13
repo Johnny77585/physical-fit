@@ -7,35 +7,29 @@ const exerciseController = {
   getExercises: (req, res) => {
     const token = req.cookies.token
     const bodypartName = req.query.bodypart
+
     if (token) {
       try {
         const decodedToken = jwt.verify(token, process.env.JWT_SECRET)
         const userId = decodedToken.id
-        let whereCondition = {
+        const exerciseWhereClause = {
           [Op.or]: [
             { userId }, // 找出使用者相關的運動
             { userId: null } // 找出原本沒有包含使用者的運動
           ]
         }
-        if (bodypartName && bodypartName !== 'all') {
-          whereCondition = {
-            ...whereCondition,
-            '$Bodypart.name$': bodypartName
-          }
-        }
         Exercise.findAll({
-          where: whereCondition,
-          include: {
+          where: exerciseWhereClause,
+          include: [{
             model: Bodypart,
-            attributes: ['name']
-          },
+            attributes: [],
+            where: (bodypartName !== 'all') ? { name: bodypartName } : {} // all的話，就不要有where條件
+          }],
+          attributes: ['user_id', 'name', 'photo'],
           raw: true
         })
           .then(exercises => {
-            const data = exercises.map(e => ({
-              ...e
-            }))
-            res.json(data)
+            res.json(exercises)
           })
           .catch(err => {
             console.error(err)

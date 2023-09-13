@@ -1,4 +1,4 @@
-let bodypart = 'all' // 預設all
+let bodypart = 'all'
 getExercises(bodypart)
 
 // 調用函數以填充選項
@@ -72,17 +72,26 @@ function displayExercises (exercises) {
   exercisesList.innerHTML = '' // 清空現有的內容
 
   exercises.forEach(exercise => {
+    console.log(exercise)
     const listItem = document.createElement('div')
     listItem.setAttribute('class', 'col-md-4')
     listItem.innerHTML = `
-        <div class="card mb-4 shadow-sm text-bg-secondary ">
-          <img class="card-img-top" src=${exercise.photo} alt="Card image cap" width="286px" height="180px">
-            <div class="card-body d-flex justify-content-between">
-              <p class="card-text">${exercise.name}</p>
-              <button type="button" class="btn btn-outline-light">加入菜單</button>
+        <div class="card mb-4 shadow">
+          <img class="card-img-top" src="${exercise.photo}" alt="${exercise.name}" width="286px" height="180px">
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">${exercise.name}</h5>
+            <div class="d-flex justify-content-between align-items-center">
+              <button type="button" class="btn btn-primary btn-sm">+加入菜單</button>
+              ${exercise.user_id
+                ? `<div class="btn-group">
+                  <button type="button" class="btn btn-success btn-sm">修改</button>
+                  <button type="button" class="btn btn-danger btn-sm">刪除</button>
+                </div>`
+                : ''}
             </div>
+          </div>
         </div>
-    `
+      `
     exercisesList.appendChild(listItem)
   })
 }
