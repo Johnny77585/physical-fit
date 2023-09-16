@@ -1,8 +1,8 @@
 let bodypart = 'all'
 getExercises(bodypart)
-
 // 調用函數以填充選項
-populateBodypartOptions()
+populateBodypartOptions('bodypartOption')
+populateBodypartOptions('modifyBodypart')
 
 // 調用初始化函數
 initializeBodypartsClickHandlers()
@@ -72,7 +72,6 @@ function displayExercises (exercises) {
   exercisesList.innerHTML = '' // 清空現有的內容
 
   exercises.forEach(exercise => {
-    console.log(exercise)
     const listItem = document.createElement('div')
     listItem.setAttribute('class', 'col-md-4')
     listItem.innerHTML = `
@@ -84,8 +83,8 @@ function displayExercises (exercises) {
               <button type="button" class="btn btn-primary btn-sm">+加入菜單</button>
               ${exercise.user_id
                 ? `<div class="btn-group">
-                  <button type="button" class="btn btn-success btn-sm">修改</button>
-                  <button type="button" class="btn btn-danger btn-sm">刪除</button>
+                  <button type="button" class="btn btn-success btn-sm edit-exercise" data-exercise-id="${exercise.id}" data-bodypart-id="${exercise.bodypart_id}" data-exercise-name="${exercise.name}" data-bs-toggle="modal" data-bs-target="#modifyExerciseModal">修改</button>
+                  <button type="button" class="btn btn-danger btn-sm delete-exercise" data-exercise-id="${exercise.id}">刪除</button>
                 </div>`
                 : ''}
             </div>
@@ -97,8 +96,8 @@ function displayExercises (exercises) {
 }
 
 // 產生modal選項
-async function populateBodypartOptions () {
-  const bodypartSelect = document.getElementById('bodypart')
+async function populateBodypartOptions (bodypart) {
+  const bodypartSelect = document.getElementById(bodypart)
   try {
     const bodyparts = await getBodyparts()
     bodyparts.forEach(part => {
@@ -144,4 +143,57 @@ document.addEventListener('DOMContentLoaded', function () {
     alert(successMessage)
     localStorage.removeItem('successMessage')
   }
+})
+
+// 新增&刪除事件
+const exercisesList = document.querySelector('.exerciseContent .row')
+
+exercisesList.addEventListener('click', event => {
+  const target = event.target
+
+  if (target.classList.contains('edit-exercise')) {
+    const exerciseId = target.getAttribute('data-exercise-id')
+    const bodypartId = target.getAttribute('data-bodypart-id')
+    const modifyName = target.getAttribute('data-exercise-name')
+    const bodypartSelect = document.getElementById('modifyBodypart')
+    const nameSelect = document.getElementById('modifyName')
+    const matchingOption =
+      bodypartSelect.querySelector(`option[value="${bodypartId}"]`)
+    if (matchingOption) {
+      matchingOption.selected = true
+    }
+    nameSelect.value = modifyName
+    const modifyButton = document.getElementById('modifyExercise')
+    modifyButton.setAttribute('data-exercise-id', exerciseId)
+  } else if (target.classList.contains('delete-exercise')) {
+    const exerciseId = target.getAttribute('data-exercise-id')
+    console.log(`Delete exercise with ID: ${exerciseId}`)
+  }
+})
+
+// modal更新exercise
+const modifyButton = document.getElementById('modifyExercise')
+modifyButton.addEventListener('click', function (event) {
+  event.preventDefault()
+
+  const form = document.getElementById('modifyexerciseForm')
+  const exerciseId = modifyButton.getAttribute('data-exercise-id')
+  const formData = new FormData(form)
+  formData.append('exerciseId', exerciseId)
+  fetch('/api/exercises', {
+    method: 'PUT',
+    body: formData
+  })
+    .then(response => {
+      if (response.ok) {
+        localStorage.setItem('successMessage', '更新成功')
+        window.location.href = '/exercises'
+      } else {
+        alert('更新失敗')
+      }
+    })
+    .catch(error => {
+      console.error('API error:', error)
+      alert('發生錯誤，請稍後再試。')
+    })
 })

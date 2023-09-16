@@ -25,7 +25,7 @@ const exerciseController = {
             attributes: [],
             where: (bodypartName !== 'all') ? { name: bodypartName } : {} // all的話，就不要有where條件
           }],
-          attributes: ['user_id', 'name', 'photo'],
+          attributes: ['id', 'user_id', 'name', 'photo', 'bodypart_id'],
           raw: true
         })
           .then(exercises => {
@@ -78,7 +78,7 @@ const exerciseController = {
             if (filePath) {
               Exercise.create({
                 userId,
-                bodypartId: req.body.bodypart,
+                bodypartId: req.body.bodypartOption,
                 name: req.body.name,
                 photo: filePath || null
               })
@@ -96,6 +96,74 @@ const exerciseController = {
           .catch(err => {
             console.error(err)
             res.status(500).json({ message: 'File processing error' })
+          })
+      } catch (err) {
+        console.error(err)
+        res.status(401).json({ message: 'Unauthorized' })
+      }
+    } else {
+      res.status(401).json({ message: 'Unauthorized' })
+    }
+  },
+  putExercise: (req, res) => {
+    const token = req.cookies.token
+    if (token) {
+      try {
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET)
+        const userId = decodedToken.id
+        const exerciseId = req.body.exerciseId
+        Exercise.findOne({
+          where: {
+            id: exerciseId,
+            userId
+          }
+        })
+          .then(exercise => {
+            if (!exercise) {
+              return res.status(404).json({ message: 'Exercise not found or unauthorized' })
+            }
+            const { file } = req
+            if (file) {
+              localFileHandler(file)
+                .then(filePath => {
+                  if (filePath) {
+                    exercise.update({
+                      bodypartId: req.body.modifyBodypart,
+                      name: req.body.modifyName,
+                      photo: filePath
+                    })
+                      .then(updatedExercise => {
+                        res.status(200).json({ message: 'Exercise updated successfully', exercise: updatedExercise })
+                      })
+                      .catch(err => {
+                        console.error(err)
+                        res.status(500).json({ message: 'Internal Server Error' })
+                      })
+                  } else {
+                    res.status(500).json({ message: 'File processing error' })
+                  }
+                })
+                .catch(err => {
+                  console.error(err)
+                  res.status(500).json({ message: 'File processing error' })
+                })
+            } else {
+              exercise.update({
+                bodypartId: req.body.modifyBodypart,
+                name: req.body.modifyName
+              })
+                .then(updatedExercise => {
+                  res.status(200).json({ message: 'Exercise update suceessfully' })
+                })
+                .catch(err => {
+                  console.error(err)
+                  res.status(500).json({ message: 'Internal Server Error' })
+                })
+            }
+          })
+          .catch(err => {
+            console.error(err)
+            res.status(500).json({ message: 'Internal Server Error' })
           })
       } catch (err) {
         console.error(err)

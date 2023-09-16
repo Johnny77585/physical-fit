@@ -1,0 +1,35 @@
+  <!-- modal -->
+<div class="modal fade" id="modifyExerciseModal" tabindex="-1" aria-labelledby="modifyExerciseModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modifymExerciseModalLabel">更新自選動作</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="modifyexerciseForm" enctype="multipart/form-data">
+          <!-- 上傳圖片 -->
+          <div class="form-row mb-3">
+            <label for="modifyPhoto" class="form-label">重新上傳圖片</label>
+            <input type="file" class="form-control" id="modifyPhoto" name="modifyPhoto">
+          </div>
+          <!-- 選擇部位 -->
+          <div class="mb-3">
+            <label for="modifyBodypart" class="form-label">選擇身體部位</label>
+            <select class="form-select" id="modifyBodypart" name="modifyBodypart">
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="name" class="form-label">更新定義名稱</label>
+            <input type="text" class="form-control" id="modifyName" name="modifyName">
+          </div>
+        </form>
+      </div>
+      <!-- 底部 -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+        <button type="submit" class="btn btn-primary" id="modifyExercise">更新</button>
+      </div>
+    </div>
+  </div>
+</div>

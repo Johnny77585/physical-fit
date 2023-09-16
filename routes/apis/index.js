@@ -12,7 +12,7 @@ router.get('/exercises', exerciseController.getExercises)
 router.get('/bodyparts', exerciseController.getBodyparts)
 
 router.post('/exercises', upload.single('photo'), exerciseController.postExercise)
-// router.put('/exercises', upload.single('image'), exerciseController.putExercise)
+router.put('/exercises', upload.single('modifyPhoto'), exerciseController.putExercise)
 
 router.use('/', apiErrorHandler)
 module.exports = router
