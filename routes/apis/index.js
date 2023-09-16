@@ -13,6 +13,7 @@ router.get('/bodyparts', exerciseController.getBodyparts)
 
 router.post('/exercises', upload.single('photo'), exerciseController.postExercise)
 router.put('/exercises', upload.single('modifyPhoto'), exerciseController.putExercise)
+router.delete('/exercises/:exerciseId', exerciseController.deleteExercise)
 
 router.use('/', apiErrorHandler)
 module.exports = router

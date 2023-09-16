@@ -84,7 +84,7 @@ function displayExercises (exercises) {
               ${exercise.user_id
                 ? `<div class="btn-group">
                   <button type="button" class="btn btn-success btn-sm edit-exercise" data-exercise-id="${exercise.id}" data-bodypart-id="${exercise.bodypart_id}" data-exercise-name="${exercise.name}" data-bs-toggle="modal" data-bs-target="#modifyExerciseModal">修改</button>
-                  <button type="button" class="btn btn-danger btn-sm delete-exercise" data-exercise-id="${exercise.id}">刪除</button>
+                  <button type="button" class="btn btn-danger btn-sm delete-exercise" data-exercise-id="${exercise.id}"  data-exercise-name="${exercise.name}">刪除</button>
                 </div>`
                 : ''}
             </div>
@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 })
 
-// 新增&刪除事件
+// 更新&刪除事件
 const exercisesList = document.querySelector('.exerciseContent .row')
 
 exercisesList.addEventListener('click', event => {
@@ -167,7 +167,8 @@ exercisesList.addEventListener('click', event => {
     modifyButton.setAttribute('data-exercise-id', exerciseId)
   } else if (target.classList.contains('delete-exercise')) {
     const exerciseId = target.getAttribute('data-exercise-id')
-    console.log(`Delete exercise with ID: ${exerciseId}`)
+    const exerciseName = target.getAttribute('data-exercise-name')
+    confirmDelete(exerciseName, exerciseId)
   }
 })
 
@@ -197,3 +198,26 @@ modifyButton.addEventListener('click', function (event) {
       alert('發生錯誤，請稍後再試。')
     })
 })
+
+// 刪除自己的exercise
+function confirmDelete (exerciseName, exerciseId) {
+  const confirmation = confirm(`確定要刪除 ${exerciseName} 嗎？`)
+  if (confirmation) {
+    fetch(`/api/exercises/${exerciseId}`, {
+      method: 'DELETE'
+    })
+      .then(response => {
+        if (response.ok) {
+          alert('已成功删除')
+          location.reload()
+        } else {
+          alert('删除出現錯誤')
+        }
+      })
+      .catch(error => {
+        console.error('API error:', error)
+        alert('删除出現錯誤')
+      })
+  }
+  return false
+}

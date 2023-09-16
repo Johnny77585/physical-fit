@@ -172,6 +172,32 @@ const exerciseController = {
     } else {
       res.status(401).json({ message: 'Unauthorized' })
     }
+  },
+  deleteExercise: (req, res) => {
+    const token = req.cookies.token
+    if (token) {
+      try {
+        const exerciseId = req.params.exerciseId
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET)
+        const userId = decodedToken.id
+        Exercise.findOne({
+          where: {
+            id: exerciseId,
+            userId
+          }
+        })
+          .then(exercise => {
+            if (!exercise) {
+              return res.status(404).json({ message: 'Exercise not found or unauthorized' })
+            }
+            exercise.destroy()
+            return res.status(200).json({ message: 'Exercise deleted successfully' })
+          })
+      } catch (err) {
+        console.error(err)
+        return res.status(500).json({ message: 'Internal Server Error' })
+      }
+    }
   }
 }
 
