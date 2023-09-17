@@ -12,6 +12,8 @@ router.get('/signup', (req, res) => { res.render('signup') })
 router.post('/signin', passport.authenticate('local', { failureRedirect: '/signin', failureFlash: true }), userController.signIn)
 router.post('/signup', userController.signUp)
 router.get('/exercises', authenticated, exerciseController.getExercises)
+router.get('/exerciseLists', authenticated, exerciseController.getExerciseLists)
+
 router.get('/logout', userController.logout)
 router.use('/', generalErrorHandler)
 module.exports = router

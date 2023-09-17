@@ -4,6 +4,7 @@
   box-shadow: 10px 10px 20px #9f6a47;
   border-radius: 15px;
 }
+
 .type {
   width: 100%;
   height: 60px;
@@ -14,6 +15,7 @@
   border-bottom: 1px solid #e0bfa0;
   border-radius: 15px 15px 0px 0px;
 }
+
 .exercisesFrame {
   width: 100%;
   height: 655px;
@@ -22,10 +24,10 @@
   border-radius: 0px 0px 15px 15px;
   display: flex;
 }
+
 .exercises,
 .lists,
-.dailyList
-{
+.dailyList {
   width: 155px;
   height: 60px;
   font-size: 18px;
@@ -34,76 +36,34 @@
   user-select: none;
 }
 
-.exercises {
+.lists {
   color: #922c21;
   border-bottom: 2px solid #7f5539;
   box-sizing: border-box;
 }
 
-.lists,
-.dailyList
-{
+.exercises,
+.dailyList {
   color: #bf9d7e;
   box-sizing: border-box;
 }
 
 .exercises:hover,
 .lists:hover,
-.dailyList:hover
-{
+.dailyList:hover {
   background-color: antiquewhite;
   color: #9f6a47;
   font-weight: 700;
   cursor: pointer;
 }
-.bodypart{
-  display: flex;
-  align-items: center;
-  line-height: 50px;
-  justify-content: center;
-  border-bottom: 1px solid #d4ac97;
-  padding: 10px 20px;
-  font-size: 18px;
-  font-weight: 600;
-  color:#4d311e;
-}
+
 .list {
   width: 20%;
   background-color: #ede0d4;
   position: relative;
 }
-.all,
-.core,
-.arms,
-.back,
-.chest,
-.legs,
-.shoulders,
-.cardio,
-.other {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 80%;
-  line-height: 40px;
-  margin: 20px;
-  border-radius: 10px;
-}
-.all:hover,
-.core:hover,
-.arms:hover,
-.back:hover,
-.chest:hover,
-.legs:hover,
-.shoulders:hover,
-.cardio:hover,
-.other:hover {
-  cursor: pointer;
-  color: #e94b39;
-  background: #faebd7;
-  font-weight: bold;
-}
-.exerciseContent {
+
+.listContent {
   width: 100%;
   height: auto;
   background-color: #ede0d4;
@@ -111,20 +71,22 @@
   box-shadow: 10px 10px 20px #9f6a47;
   overflow-y: scroll;
 }
+
 /* postFrame scrollbar style */
-.exerciseContent::-webkit-scrollbar {
+.listContent::-webkit-scrollbar {
   width: 6px;
 }
 
-.exerciseContent::-webkit-scrollbar-thumb {
+.listContent::-webkit-scrollbar-thumb {
   background-color: #f0d4bc;
   border: 1px solid #922c21;
   border-radius: 15px;
 }
 
-.exerciseContent::-webkit-scrollbar-track-piece:end {
+.listContent::-webkit-scrollbar-track-piece:end {
   margin-bottom: 3px;
 }
-.exerciseContent .row {
-    margin: 10px;
+
+.listContent .row {
+  margin: 10px;
 }
