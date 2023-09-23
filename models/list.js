@@ -17,11 +17,15 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'listId',
         as: 'ListedExercise'
       })
+      List.belongsToMany(models.date, {
+        through: models.listdate,
+        foreignKey: 'listId',
+        as: 'ListedDates'
+      })
     }
   }
   List.init({
     name: DataTypes.STRING,
-    dateId: DataTypes.INTEGER,
     userId: DataTypes.INTEGER
   }, {
     sequelize,

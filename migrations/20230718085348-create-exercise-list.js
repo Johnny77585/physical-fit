@@ -9,6 +9,18 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      sets: {
+        type: Sequelize.INTEGER
+      },
+      weight: {
+        type: Sequelize.FLOAT
+      },
+      weight_unit: {
+        type: Sequelize.STRING
+      },
+      repetitions: {
+        type: Sequelize.INTEGER
+      },
       exercise_id: {
         type: Sequelize.INTEGER
       },

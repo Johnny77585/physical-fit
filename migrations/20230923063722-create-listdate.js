@@ -2,20 +2,17 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.createTable('Sets', {
+    await queryInterface.createTable('Listdates', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      exercise_id: {
+      date_id: {
         type: Sequelize.INTEGER
       },
-      weight: {
-        type: Sequelize.FLOAT
-      },
-      repetitions: {
+      list_id: {
         type: Sequelize.INTEGER
       },
       created_at: {
@@ -29,6 +26,6 @@ module.exports = {
     })
   },
   async down (queryInterface, Sequelize) {
-    await queryInterface.dropTable('Sets')
+    await queryInterface.dropTable('Listdates')
   }
 }

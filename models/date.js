@@ -10,7 +10,11 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate (models) {
-      Date.hasMany(models.List, { foreignKey: 'dateId' })
+      Date.belongsToMany(models.list, {
+        through: models.listdate,
+        foreignKey: 'dateId',
+        as: 'dateListed'
+      })
     }
   }
   Date.init({

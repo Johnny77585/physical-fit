@@ -10,10 +10,15 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate (models) {
-
+      ExerciseList.belongsTo(models.List, { foreignKey: 'listId' })
+      ExerciseList.belongsTo(models.Exercise, { foreignKey: 'exerciseId' })
     }
   }
   ExerciseList.init({
+    sets: DataTypes.INTEGER,
+    weight: DataTypes.FLOAT,
+    weightUnit: DataTypes.STRING,
+    repetitions: DataTypes.INTEGER,
     exerciseId: DataTypes.INTEGER,
     listId: DataTypes.INTEGER
   }, {
