@@ -10,8 +10,8 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate (models) {
-      Date.belongsToMany(models.list, {
-        through: models.listdate,
+      Date.belongsToMany(models.List, {
+        through: models.Listdate,
         foreignKey: 'dateId',
         as: 'dateListed'
       })

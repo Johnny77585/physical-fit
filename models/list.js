@@ -14,12 +14,12 @@ module.exports = (sequelize, DataTypes) => {
       List.belongsTo(models.User, { foreignKey: 'userId' })
       List.belongsToMany(models.Exercise, {
         through: models.ExerciseList,
-        foreignKey: 'listId',
+        foreignKey: 'ListId',
         as: 'ListedExercise'
       })
-      List.belongsToMany(models.date, {
-        through: models.listdate,
-        foreignKey: 'listId',
+      List.belongsToMany(models.Date, {
+        through: models.Listdate,
+        foreignKey: 'ListId',
         as: 'ListedDates'
       })
     }
