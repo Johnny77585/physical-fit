@@ -12,11 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate (models) {
       Exercise.belongsTo(models.Bodypart, { foreignKey: 'bodypartId' })
       Exercise.belongsTo(models.User, { foreignKey: 'userId' })
-      Exercise.belongsToMany(models.List, {
-        through: models.ExerciseList,
-        foreignKey: 'exerciseId',
-        as: 'ExerciseListed'
-      })
+      Exercise.hasMany(models.ExerciseList, { foreignKey: 'exerciseId' })
     }
   }
   Exercise.init({

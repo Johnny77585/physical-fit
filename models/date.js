@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate (models) {
       Date.belongsToMany(models.List, {
-        through: models.Listdate,
+        through: models.ListDate,
         foreignKey: 'dateId',
         as: 'dateListed'
       })
@@ -21,7 +21,9 @@ module.exports = (sequelize, DataTypes) => {
     date: DataTypes.DATE
   }, {
     sequelize,
-    modelName: 'Date'
+    modelName: 'Date',
+    tableName: 'Dates',
+    underscored: true
   })
   return Date
 }

@@ -9,7 +9,7 @@ module.exports = {
       updated_at: new Date()
     }, {
       name: '腿部菜單',
-      user_id: 2,
+      user_id: 1,
       created_at: new Date(),
       updated_at: new Date()
     }, {

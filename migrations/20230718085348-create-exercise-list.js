@@ -9,17 +9,9 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      sets: {
-        type: Sequelize.INTEGER
-      },
-      weight: {
-        type: Sequelize.FLOAT
-      },
-      weight_unit: {
-        type: Sequelize.STRING
-      },
-      repetitions: {
-        type: Sequelize.INTEGER
+      sets_details: {
+        type: Sequelize.JSON, // 存储每组的重量和次数
+        allowNull: false
       },
       exercise_id: {
         type: Sequelize.INTEGER

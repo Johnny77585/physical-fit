@@ -10,16 +10,11 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate (models) {
-      List.belongsTo(models.Date, { foreignKey: 'dateId' })
       List.belongsTo(models.User, { foreignKey: 'userId' })
-      List.belongsToMany(models.Exercise, {
-        through: models.ExerciseList,
-        foreignKey: 'ListId',
-        as: 'ListedExercise'
-      })
+      List.hasMany(models.ExerciseList, { foreignKey: 'listId' })
       List.belongsToMany(models.Date, {
-        through: models.Listdate,
-        foreignKey: 'ListId',
+        through: models.ListDate,
+        foreignKey: 'listId',
         as: 'ListedDates'
       })
     }
@@ -29,7 +24,10 @@ module.exports = (sequelize, DataTypes) => {
     userId: DataTypes.INTEGER
   }, {
     sequelize,
-    modelName: 'List'
+    modelName: 'List',
+    tableName: 'Lists',
+
+    underscored: true
   })
   return List
 }

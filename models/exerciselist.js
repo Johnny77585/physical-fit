@@ -15,15 +15,17 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   ExerciseList.init({
-    sets: DataTypes.INTEGER,
-    weight: DataTypes.FLOAT,
-    weightUnit: DataTypes.STRING,
-    repetitions: DataTypes.INTEGER,
     exerciseId: DataTypes.INTEGER,
-    listId: DataTypes.INTEGER
+    listId: DataTypes.INTEGER,
+    setsDetails: {
+      type: DataTypes.JSON,
+      allowNull: false
+    }
   }, {
     sequelize,
-    modelName: 'ExerciseList'
+    modelName: 'ExerciseList',
+    tableName: 'ExerciseLists',
+    underscored: true
   })
   return ExerciseList
 }
