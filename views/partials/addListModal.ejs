@@ -1,0 +1,24 @@
+  <!-- modal -->
+<div class="modal fade" id="addListModal" tabindex="-1" aria-labelledby="addListModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addListModalLabel">新增菜單</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" >
+        <form id="listForm">
+          <div class="mb-3">
+            <label for="name" class="form-label">自定義名稱</label>
+            <input type="text" class="form-control" id="name" name="name">
+          </div>
+        </form>
+      </div>
+      <!-- 底部 -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+        <button type="submit" class="btn btn-primary" id="saveList">保存</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,8 +1,10 @@
+getExerciseLists()
+
+// 取得exerciseList內容
 async function getExerciseLists () {
   const listCards = document.querySelector('.listContent .row')
   const response = await fetch('/api/exerciselists')
   const lists = await response.json()
-  console.log(lists)
   const displayedListExercises = {}
   lists.forEach(list => {
     const listId = list.id
@@ -27,4 +29,39 @@ async function getExerciseLists () {
   }
 }
 
-getExerciseLists()
+// modal新增exerciseList
+const submitButton = document.getElementById('saveList')
+submitButton.addEventListener('click', function (event) {
+  event.preventDefault()
+
+  const form = document.getElementById('listForm')
+  const formData = new FormData(form)
+  fetch('/api/exerciselist', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(Object.fromEntries(formData))
+  })
+    .then(response => {
+      if (response.ok) {
+        localStorage.setItem('successMessage', '新增成功')
+        window.location.href = '/exerciseLists'
+      } else {
+        alert('新增失敗')
+      }
+    })
+    .catch(error => {
+      console.error('API error:', error)
+      alert('發生錯誤，請稍後再試。')
+    })
+})
+
+document.addEventListener('DOMContentLoaded', function () {
+  const successMessage = localStorage.getItem('successMessage')
+
+  if (successMessage) {
+    alert(successMessage)
+    localStorage.removeItem('successMessage')
+  }
+})

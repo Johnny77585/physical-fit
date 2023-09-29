@@ -17,6 +17,7 @@ router.post('/exercises', upload.single('photo'), exerciseController.postExercis
 router.put('/exercises', upload.single('modifyPhoto'), exerciseController.putExercise)
 router.delete('/exercises/:exerciseId', exerciseController.deleteExercise)
 router.get('/exerciselists', exerciseListController.getExerciseLists)
+router.post('/exerciselist', exerciseListController.postExerciseList)
 
 router.use('/', apiErrorHandler)
 module.exports = router
