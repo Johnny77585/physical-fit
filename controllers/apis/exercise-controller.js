@@ -73,15 +73,20 @@ const exerciseController = {
         const decodedToken = jwt.verify(token, process.env.JWT_SECRET)
         const userId = decodedToken.id
         const { file } = req
-        localFileHandler(file)
-          .then(filePath => {
-            if (filePath) {
-              Exercise.create({
-                userId,
-                bodypartId: req.body.bodypartOption,
-                name: req.body.name,
-                photo: filePath || null
-              })
+        const { bodypartOption, name } = req.body
+        const exerciseData = {
+          userId,
+          bodypartId: bodypartOption,
+          name,
+          photo: null
+        }
+        if (file) {
+          localFileHandler(file)
+            .then(filePath => {
+              if (filePath) {
+                exerciseData.photo = filePath
+              }
+              Exercise.create(exerciseData)
                 .then(exercise => {
                   res.status(201).json({ message: 'Exercise created successfully', exercise })
                 })
@@ -89,14 +94,21 @@ const exerciseController = {
                   console.error(err)
                   res.status(500).json({ message: 'Internal Server Error' })
                 })
-            } else {
+            })
+            .catch(err => {
+              console.error(err)
               res.status(500).json({ message: 'File processing error' })
-            }
-          })
-          .catch(err => {
-            console.error(err)
-            res.status(500).json({ message: 'File processing error' })
-          })
+            })
+        } else {
+          Exercise.create(exerciseData)
+            .then(exercise => {
+              res.status(201).json({ message: 'Exercise created successfully', exercise })
+            })
+            .catch(err => {
+              console.error(err)
+              res.status(500).json({ message: 'Internal Server Error' })
+            })
+        }
       } catch (err) {
         console.error(err)
         res.status(401).json({ message: 'Unauthorized' })
