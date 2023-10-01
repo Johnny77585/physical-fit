@@ -10,8 +10,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       sets_details: {
-        type: Sequelize.JSON, // 存储每组的重量和次数
-        allowNull: false
+        type: Sequelize.JSON
       },
       exercise_id: {
         type: Sequelize.INTEGER

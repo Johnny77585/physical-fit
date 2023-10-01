@@ -1,0 +1,30 @@
+  <!-- modal -->
+<div class="modal fade" id="addExerciseListModal" tabindex="-1" aria-labelledby="addExerciseListModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addExerciseListModal">新增運動至菜單</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" >
+        <form id="listForm">
+          <!-- 運動名稱 -->
+          <div class="mb-3">
+            <p id="exerciseName" name="exerciseName" style="font-size: 24px;" ></p>
+          </div>
+          <!-- 選擇部位 -->
+          <div class="mb-3">
+            <label for="exerciseList" class="form-label">選擇加入的菜單</label>
+            <select class="form-select" id="exerciseList" name="exerciseList">
+            </select>
+          </div>
+        </form>
+      </div>
+      <!-- 底部 -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+        <button type="submit" class="btn btn-primary" id="addListButton">保存</button>
+      </div>
+    </div>
+  </div>
+</div>

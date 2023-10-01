@@ -18,8 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     exerciseId: DataTypes.INTEGER,
     listId: DataTypes.INTEGER,
     setsDetails: {
-      type: DataTypes.JSON,
-      allowNull: false
+      type: DataTypes.JSON
     }
   }, {
     sequelize,
