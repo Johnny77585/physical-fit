@@ -18,7 +18,7 @@ async function getExerciseLists () {
       const exerciseIds = displayedListExercises[listId]
       const exerciseIdList = exerciseIds.join('<br>')
       listCards.innerHTML += `
-        <div class="card border-primary mb-3" style="max-width: 18rem;">
+        <div class="card mb-3" style="max-width: 18rem;">
           <div class="card-body text-primary">
             <h5 class="card-title">${lists.find(list => list.id === parseInt(listId)).name}</h5>
             <p class="card-text">${exerciseIdList}</p>
