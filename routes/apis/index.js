@@ -16,7 +16,7 @@ router.get('/bodyparts', exerciseController.getBodyparts)
 router.post('/exercises', upload.single('photo'), exerciseController.postExercise)
 router.put('/exercises', upload.single('modifyPhoto'), exerciseController.putExercise)
 router.delete('/exercises/:exerciseId', exerciseController.deleteExercise)
-router.get('/exerciselists', exerciseListController.getExerciseLists)
+router.get('/exerciselists/:listId', exerciseListController.getExerciseLists)
 router.post('/exerciselist', exerciseListController.postExerciseList)
 router.put('/exerciselist/:listId', exerciseListController.putExerciseList)
 

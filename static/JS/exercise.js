@@ -22,7 +22,8 @@ async function getBodyparts () {
 // 取得exerciseList
 async function getExerciseList () {
   try {
-    const response = await fetch('/api/exerciselists')
+    const listId = null
+    const response = await fetch(`/api/exerciselists/${listId}`)
     const exerciseLists = await response.json()
     return exerciseLists
   } catch (error) {
@@ -217,7 +218,6 @@ addListButton.addEventListener('click', function (event) {
   formData.append('exerciseId', exerciseId)
   const requestBody = {
     exerciseId
-  // 添加其他需要的字段
   }
 
   fetch(`/api/exerciseList/${listSelect.value}`, {

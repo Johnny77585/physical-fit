@@ -1,9 +1,8 @@
-getExerciseLists()
-
 // 取得exerciseList內容
 async function getExerciseLists () {
   const listCards = document.querySelector('.listContent .row')
-  const response = await fetch('/api/exerciselists')
+  const listId = null
+  const response = await fetch(`api/exerciselists/${listId}`)
   const lists = await response.json()
   const displayedListExercises = {}
   lists.forEach(list => {
@@ -19,15 +18,20 @@ async function getExerciseLists () {
       const exerciseIdList = exerciseIds.join('<br>')
       listCards.innerHTML += `
         <div class="card mb-3" style="max-width: 18rem;">
-          <div class="card-body text-primary">
-            <h5 class="card-title">${lists.find(list => list.id === parseInt(listId)).name}</h5>
-            <p class="card-text">${exerciseIdList}</p>
-          </div>
+        <div class="card-body text-primary">
+        <div class="d-flex justify-content-between align-items-center">
+        <h5 class="card-title">${lists.find(list => list.id === parseInt(listId)).name}</h5>
+        <button type="button" class="btn btn-success btn-sm edit-list" data-list-id="${listId}" data-bs-toggle="modal" data-bs-target="#editExerciseListModal">修改</button>
         </div>
-      `
+        <p class="card-text">${exerciseIdList}</p>
+        </div>
+        </div>
+        
+        `
     }
   }
 }
+getExerciseLists()
 
 // modal新增exerciseList
 const submitButton = document.getElementById('saveList')
@@ -57,6 +61,258 @@ submitButton.addEventListener('click', function (event) {
     })
 })
 
+// 產生修改菜單的modal
+document.addEventListener('click', async function (event) {
+  if (event.target.classList.contains('edit-list')) {
+    const listId = event.target.getAttribute('data-list-id')
+    const editListForm = document.getElementById('editListForm')
+    editListForm.innerHTML = ''
+    if (listId) {
+      const response = await fetch(`/api/exerciselists/${listId}`)
+      const list = await response.json()
+      if (list) {
+        list.forEach(exerciseList => {
+          const { Exercise, setsDetails, id } = exerciseList.ExerciseLists
+          const exerciseName = Exercise.name
+          const exerciseElement = createExerciseElement(exerciseName, id, setsDetails)
+          const container = document.createElement('div')
+
+          container.classList.add('mb-3')
+          container.appendChild(exerciseElement)
+          editListForm.appendChild(container)
+        })
+      }
+    }
+  }
+})
+
+function createExerciseElement (exerciseName, exerciseListId, setsDetails) {
+  const exerciseElement = document.createElement('div')
+  exerciseElement.classList.add('exercise-container')
+  exerciseElement.setAttribute('exercise-detail-id', exerciseListId)
+
+  // 運動標題
+  const pElement = createTextElement('p', exerciseName)
+  pElement.id = 'exerciseName'
+  pElement.name = 'exerciseName'
+  pElement.style.fontSize = '24px'
+
+  // 創建欄位中文
+  const labelContainer = document.createElement('div')
+  labelContainer.classList.add('label-container')
+
+  const weightLabel = createLabel('重量')
+  const repetitionsLabel = createLabel('次數')
+  const weightUnitLabel = createLabel('單位')
+
+  labelContainer.appendChild(weightLabel)
+  labelContainer.appendChild(repetitionsLabel)
+  labelContainer.appendChild(weightUnitLabel)
+
+  // 創建編輯內容
+  const setsContainer = document.createElement('div')
+  setsContainer.classList.add('sets-container')
+
+  if (setsDetails) {
+    setsDetails.forEach(setDetail => {
+      const inputGroup = createInputGroup(setDetail.weight, setDetail.repetitions, setDetail.weight_unit)
+      setsContainer.appendChild(inputGroup)
+    })
+  } else {
+    const inputGroup = createInputGroup()
+    setsContainer.appendChild(inputGroup)
+  }
+
+  // 把 pElement、labelContainer和 setsContainer 加到 exerciseElement
+  exerciseElement.appendChild(pElement)
+  exerciseElement.appendChild(labelContainer)
+  exerciseElement.appendChild(setsContainer)
+  // 增加删除整個 exercise-container 的button
+  const deleteExerciseButton = createDeleteExerciseButton(exerciseListId)
+  exerciseElement.appendChild(deleteExerciseButton)
+  // 創建 "Add Row" 按鈕
+  const addButton = createAddButton(exerciseListId)
+  // 將 "Add Row" 的button加到 setsContainer 內
+  setsContainer.appendChild(addButton)
+  return exerciseElement
+}
+
+// 創建刪除整個動作的按鈕
+function createDeleteExerciseButton (exerciseListId) {
+  const deleteExerciseButton = document.createElement('button')
+  deleteExerciseButton.type = 'button'
+  deleteExerciseButton.classList.add('btn', 'btn-danger', 'delete-exercise-button')
+  deleteExerciseButton.textContent = '删除整個動作'
+  deleteExerciseButton.setAttribute('data-exercise-detail-id', exerciseListId)
+
+  return deleteExerciseButton
+}
+
+// 刪除整個動作的Listener
+document.addEventListener('DOMContentLoaded', function () {
+  document.getElementById('editListForm').addEventListener('click', function (event) {
+    if (event.target.classList.contains('delete-exercise-button')) {
+      const exerciseListId = event.target.getAttribute('data-exercise-detail-id')
+      deleteExerciseContainer(exerciseListId)
+    }
+  })
+})
+
+// 刪除整個動作function
+function deleteExerciseContainer (exerciseListId) {
+  const exerciseElement = document.querySelector(`[exercise-detail-id="${exerciseListId}"]`)
+
+  if (exerciseElement) {
+    // 查找並删除對應的 "Add Row" 按鈕
+    const addButton = document.querySelector(`#addRowButton[data-exercise-detail-id="${exerciseListId}"]`)
+    if (addButton) {
+      addButton.remove()
+    }
+
+    exerciseElement.remove()
+  }
+}
+
+// 創建欄位中文的函數
+function createLabel (text) {
+  const label = document.createElement('label')
+  label.textContent = text
+  label.classList.add('form-label')
+  label.style.width = '30%'
+  return label
+}
+
+// 創建標題的函數
+function createTextElement (tagName, textContent) {
+  const element = document.createElement(tagName)
+  element.textContent = textContent
+  return element
+}
+
+// 創建輸入框的函數
+function createInputGroup (weight = '', repetitions = '', weightUnit = '') {
+  const inputGroup = document.createElement('div')
+  inputGroup.classList.add('input-group', 'mb-3')
+
+  const weightInput = createInput('text', 'Weight', weight)
+  const repetitionsInput = createInput('text', 'Repetitions', repetitions)
+
+  const weightUnitSelect = createSelect('Weight Unit', weightUnit)
+  weightUnitSelect.addEventListener('change', event => {
+    weightUnit = event.target.value
+  })
+
+  inputGroup.appendChild(weightInput)
+  inputGroup.appendChild(repetitionsInput)
+  inputGroup.appendChild(weightUnitSelect)
+
+  // 添加删除button
+  const deleteButton = createDeleteButton()
+  inputGroup.appendChild(deleteButton)
+
+  return inputGroup
+}
+
+// 創建刪除button的函數
+function createDeleteButton () {
+  const deleteButton = document.createElement('button')
+  deleteButton.type = 'button'
+  deleteButton.classList.add('btn', 'btn-danger', 'delete-row-button')
+  deleteButton.textContent = '删除'
+
+  return deleteButton
+}
+// 刪除單行的Listener
+document.addEventListener('DOMContentLoaded', function () {
+  document.getElementById('editListForm').addEventListener('click', function (event) {
+    if (event.target.classList.contains('delete-row-button')) {
+      const inputGroup = event.target.closest('.input-group')
+      if (inputGroup) {
+        inputGroup.remove()
+      }
+    }
+  })
+})
+
+// 創建kg、lb的選項
+function createSelect (placeholder, selectedValue) {
+  const select = document.createElement('select')
+  select.classList.add('form-control')
+  select.name = 'weightUnit'
+
+  const optionKg = document.createElement('option')
+  optionKg.value = '公斤'
+  optionKg.text = '公斤'
+  if (selectedValue === '公斤') {
+    optionKg.selected = true
+  }
+
+  const optionLb = document.createElement('option')
+  optionLb.value = '磅'
+  optionLb.text = '磅'
+  if (selectedValue === '磅') {
+    optionLb.selected = true
+  }
+
+  select.appendChild(optionKg)
+  select.appendChild(optionLb)
+
+  return select
+}
+
+// 創建輸入框Input元素
+function createInput (type, placeholder, value = '') {
+  const input = document.createElement('input')
+  input.type = type
+  input.placeholder = placeholder
+  input.value = value
+  input.classList.add('form-control')
+  return input
+}
+
+// 創建多一行的按鈕
+function createAddButton (exerciseListId) {
+  const addButtonContainer = document.createElement('div')
+  addButtonContainer.classList.add('float-end')
+
+  const addButton = document.createElement('button')
+  addButton.type = 'button'
+  addButton.id = 'addRowButton'
+  addButton.setAttribute('data-exercise-detail-id', exerciseListId)
+  addButton.classList.add('btn', 'btn-outline-info')
+  addButton.textContent = '+新增一行'
+
+  addButtonContainer.appendChild(addButton) // 添加到 addButtonContainer 中
+
+  return addButtonContainer
+}
+
+// 產生一行空白輸入框
+document.getElementById('editListForm').addEventListener('click', event => {
+  const target = event.target
+  if (target.classList.contains('btn')) {
+    createInputRow(event)
+  }
+})
+
+// 產生一行輸入框的函數
+function createInputRow (event) {
+  const exerciseListId = event.target.getAttribute('data-exercise-detail-id')
+  const exerciseElement = document.querySelector(`[exercise-detail-id="${exerciseListId}"]`)
+
+  if (exerciseElement) {
+    const inputGroups = exerciseElement.querySelectorAll('.input-group')
+    if (inputGroups.length > 0) {
+      const inputGroup = createInputGroup()
+      inputGroups[inputGroups.length - 1].after(inputGroup)
+    } else {
+      const initialInputGroup = createInputGroup()
+      exerciseElement.appendChild(initialInputGroup)
+    }
+  }
+}
+
+// 顯示提示內容
 document.addEventListener('DOMContentLoaded', function () {
   const successMessage = localStorage.getItem('successMessage')
 

@@ -4,27 +4,53 @@ const jwt = require('jsonwebtoken')
 const exerciseListController = {
   getExerciseLists: (req, res) => {
     const token = req.cookies.token
+    const { listId } = req.params
     if (token) {
       try {
         const decodedToken = jwt.verify(token, process.env.JWT_SECRET)
         const userId = decodedToken.id
-        List.findAll({
-          where: {
-            userId
-          },
-          include: [{
-            model: ExerciseList,
-            include: Exercise
-          }],
-          raw: true,
-          nest: true
-        })
-          .then(lists => {
-            res.json(lists)
-          }).catch(error => {
-            console.error(error)
-            return res.status(500).json({ message: 'Internal Server Error' })
+        if (listId !== 'null') {
+          List.findAll({
+            where: {
+              id: listId
+            },
+            include: [{
+              model: ExerciseList,
+              include: Exercise
+            }],
+            raw: true,
+            nest: true
           })
+            .then(list => {
+              if (!list) {
+                return res.status(404).json({ message: 'List not found' })
+              }
+              res.json(list)
+            })
+            .catch(error => {
+              console.error(error)
+              return res.status(500).json({ message: 'Internal Server Error' })
+            })
+        } else {
+          List.findAll({
+            where: {
+              userId
+            },
+            include: [{
+              model: ExerciseList,
+              include: Exercise
+            }],
+            raw: true,
+            nest: true
+          })
+            .then(lists => {
+              res.json(lists)
+            })
+            .catch(error => {
+              console.error(error)
+              return res.status(500).json({ message: 'Internal Server Error' })
+            })
+        }
       } catch (err) {
         console.error(err)
         return res.status(500).json({ message: 'Internal Server Error' })
