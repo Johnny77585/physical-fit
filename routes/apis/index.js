@@ -20,6 +20,7 @@ router.get('/exerciselists/:listId', exerciseListController.getExerciseLists)
 router.post('/exerciselist', exerciseListController.postExerciseList)
 router.put('/exerciselist/:listId', exerciseListController.putExerciseList)
 router.put('/exerciselistDetail/:listId', exerciseListController.putExerciseListDetail)
+router.delete('/exerciselists/:listId', exerciseListController.deleteExerciseList)
 
 router.use('/', apiErrorHandler)
 module.exports = router

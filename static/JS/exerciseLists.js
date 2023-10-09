@@ -16,12 +16,16 @@ async function getExerciseLists () {
     if (Object.hasOwnProperty.call(displayedListExercises, listId)) {
       const exerciseIds = displayedListExercises[listId]
       const exerciseIdList = exerciseIds.join('<br>')
+      const listName = lists.find(list => list.id === parseInt(listId)).name
       listCards.innerHTML += `
         <div class="card mb-3" style="max-width: 18rem;">
         <div class="card-body text-primary">
         <div class="d-flex justify-content-between align-items-center">
         <h5 class="card-title">${lists.find(list => list.id === parseInt(listId)).name}</h5>
+        <div class="btn-group">
         <button type="button" class="btn btn-success btn-sm edit-list" data-list-id="${listId}" data-bs-toggle="modal" data-bs-target="#editExerciseListModal">修改</button>
+        <button type="button" class="btn btn-danger btn-sm delete-list" data-list-id="${listId}" data-exercise-name="${listName}">刪除</button>
+        </div>
         </div>
         <p class="card-text">${exerciseIdList}</p>
         </div>
@@ -93,8 +97,33 @@ document.addEventListener('click', async function (event) {
         editListForm.appendChild(noExerciseMessage)
       }
     }
+  } else if (event.target.classList.contains('delete-list')) {
+    const listId = event.target.getAttribute('data-list-id')
+    const exerciseName = event.target.getAttribute('data-exercise-name')
+    confirmDelete(exerciseName, listId)
   }
 })
+
+// 確認刪除List
+function confirmDelete (exerciseName, listId) {
+  const confirmation = confirm(`確定要刪除"${exerciseName}"嗎？`)
+
+  if (confirmation) {
+    fetch(`/api/exerciseLists/${listId}`, {
+      method: 'DELETE'
+    })
+      .then(response => {
+        if (response.ok) {
+          window.location.reload()
+        } else {
+          console.error('刪除失敗')
+        }
+      })
+      .catch(error => {
+        console.error(error)
+      })
+  }
+}
 
 // 創建modal內的內容
 function createExerciseElement (exerciseName, exerciseListId, setsDetails, exerciseId) {

@@ -207,7 +207,35 @@ const exerciseListController = {
     } else {
       res.status(401).json({ message: 'Unauthorized' })
     }
+  },
+  deleteExerciseList: (req, res) => {
+    const listId = req.params.listId
+    const token = req.cookies.token
+    if (token) {
+      try {
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET)
+        const userId = decodedToken.id
+        List.findOne({
+          where: {
+            userId,
+            id: listId
+          }
+        })
+          .then(list => {
+            list.destroy()
+            return res.status(200).json({ message: 'list deleted successfully' })
+          })
+          .catch(error => {
+            console.error(error)
+            return res.status(500).json({ message: 'Internal Server Error' })
+          })
+      } catch (err) {
+        console.error(err)
+        return res.status(500).json({ message: 'Internal Server Error' })
+      }
+    } else {
+      res.status(401).json({ message: 'Unauthorized' })
+    }
   }
-
 }
 module.exports = exerciseListController

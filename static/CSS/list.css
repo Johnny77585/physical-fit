@@ -99,14 +99,13 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* 修改卡片标题样式 */
 .card-title {
   font-size: 1.25rem;
   color: #333;
   font-weight: bold;
 }
 
-/* 修改卡片正文样式 */
 .card-text {
   color: #1d7398;
+  text-decoration: underline;
 }
