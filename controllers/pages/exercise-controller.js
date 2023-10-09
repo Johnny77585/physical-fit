@@ -4,6 +4,9 @@ const exerciseController = {
   },
   getExerciseLists: (req, res) => {
     res.render('exerciseLists')
+  },
+  getDailyLists: (req, res) => {
+    res.render('dailyList')
   }
 }
 module.exports = exerciseController

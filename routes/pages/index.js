@@ -13,6 +13,7 @@ router.post('/signin', passport.authenticate('local', { failureRedirect: '/signi
 router.post('/signup', userController.signUp)
 router.get('/exercises', authenticated, exerciseController.getExercises)
 router.get('/exerciseLists', authenticated, exerciseController.getExerciseLists)
+router.get('/dailyList', authenticated, exerciseController.getDailyLists)
 
 router.get('/logout', userController.logout)
 router.use('/', generalErrorHandler)
