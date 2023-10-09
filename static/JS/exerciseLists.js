@@ -35,6 +35,8 @@ getExerciseLists()
 
 // modal新增exerciseList
 const submitButton = document.getElementById('saveList')
+const editListButton = document.getElementById('editListButton')
+const cancelButton = document.getElementById('cancelButton')
 submitButton.addEventListener('click', function (event) {
   event.preventDefault()
 
@@ -65,32 +67,41 @@ submitButton.addEventListener('click', function (event) {
 document.addEventListener('click', async function (event) {
   if (event.target.classList.contains('edit-list')) {
     const listId = event.target.getAttribute('data-list-id')
+    editListButton.setAttribute('data-list-id', listId)
     const editListForm = document.getElementById('editListForm')
     editListForm.innerHTML = ''
     if (listId) {
       const response = await fetch(`/api/exerciselists/${listId}`)
       const list = await response.json()
-      if (list) {
+      const allIdsDefined = list.every(item => item.ExerciseLists.Exercise.id !== null)
+
+      if (allIdsDefined) {
         list.forEach(exerciseList => {
           const { Exercise, setsDetails, id } = exerciseList.ExerciseLists
           const exerciseName = Exercise.name
-          const exerciseElement = createExerciseElement(exerciseName, id, setsDetails)
+          const exerciseId = Exercise.id
+          const exerciseElement = createExerciseElement(exerciseName, id, setsDetails, exerciseId)
           const container = document.createElement('div')
 
           container.classList.add('mb-3')
           container.appendChild(exerciseElement)
           editListForm.appendChild(container)
         })
+      } else {
+        const noExerciseMessage = document.createElement('p')
+        noExerciseMessage.textContent = '請先新增動作到菜單'
+        editListForm.appendChild(noExerciseMessage)
       }
     }
   }
 })
 
-function createExerciseElement (exerciseName, exerciseListId, setsDetails) {
+// 創建modal內的內容
+function createExerciseElement (exerciseName, exerciseListId, setsDetails, exerciseId) {
   const exerciseElement = document.createElement('div')
   exerciseElement.classList.add('exercise-container')
   exerciseElement.setAttribute('exercise-detail-id', exerciseListId)
-
+  exerciseElement.setAttribute('exercise-id', exerciseId)
   // 運動標題
   const pElement = createTextElement('p', exerciseName)
   pElement.id = 'exerciseName'
@@ -194,8 +205,8 @@ function createInputGroup (weight = '', repetitions = '', weightUnit = '') {
   const inputGroup = document.createElement('div')
   inputGroup.classList.add('input-group', 'mb-3')
 
-  const weightInput = createInput('text', 'Weight', weight)
-  const repetitionsInput = createInput('text', 'Repetitions', repetitions)
+  const weightInput = createInput('text', 'Weight', 'weight', weight)
+  const repetitionsInput = createInput('text', 'Repetitions', 'repetitions', repetitions)
 
   const weightUnitSelect = createSelect('Weight Unit', weightUnit)
   weightUnitSelect.addEventListener('change', event => {
@@ -261,10 +272,11 @@ function createSelect (placeholder, selectedValue) {
 }
 
 // 創建輸入框Input元素
-function createInput (type, placeholder, value = '') {
+function createInput (type, placeholder, name, value = '') {
   const input = document.createElement('input')
   input.type = type
   input.placeholder = placeholder
+  input.name = name
   input.value = value
   input.classList.add('form-control')
   return input
@@ -301,16 +313,79 @@ function createInputRow (event) {
   const exerciseElement = document.querySelector(`[exercise-detail-id="${exerciseListId}"]`)
 
   if (exerciseElement) {
-    const inputGroups = exerciseElement.querySelectorAll('.input-group')
-    if (inputGroups.length > 0) {
-      const inputGroup = createInputGroup()
-      inputGroups[inputGroups.length - 1].after(inputGroup)
-    } else {
-      const initialInputGroup = createInputGroup()
-      exerciseElement.appendChild(initialInputGroup)
-    }
+    const newInputGroup = createInputGroup()
+    const floatEndContainer = exerciseElement.querySelector('.float-end')
+
+    floatEndContainer.parentNode.insertBefore(newInputGroup, floatEndContainer)
   }
 }
+
+// 發送表單到後端API
+editListButton.addEventListener('click', function (event) {
+  event.preventDefault()
+  const listId = event.target.getAttribute('data-list-id')
+  const formData = {
+    exercises: [] // 儲存動作數據
+  }
+
+  // 獲取所有 exercise-container 元素
+  const exerciseContainers = document.querySelectorAll('.exercise-container')
+
+  exerciseContainers.forEach(exerciseContainer => {
+    const exerciseData = {
+      exerciseId: exerciseContainer.getAttribute('exercise-id'),
+      setsDetails: [] // 存儲每個組的數據
+    }
+
+    // 獲取每個組的數據
+    const inputGroups = exerciseContainer.querySelectorAll('.input-group')
+
+    inputGroups.forEach(inputGroup => {
+      const weight = inputGroup.querySelector('input[name="weight"]').value
+      const repetitions = inputGroup.querySelector('input[name="repetitions"]').value
+      const weightUnit = inputGroup.querySelector('select[name="weightUnit"]').value
+
+      // 將每個組的數據添加到 exerciseData
+      exerciseData.setsDetails.push({
+        weight,
+        repetitions,
+        weight_unit: weightUnit
+      })
+    })
+
+    // 將每個動作的數據添加到 formData
+    formData.exercises.push(exerciseData)
+  })
+  fetch(`/api/exerciseListDetail/${listId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(formData)
+  })
+    .then(response => {
+      if (response.ok) {
+        localStorage.setItem('successMessage', '更新成功')
+        window.location.href = '/exerciseLists'
+      } else {
+        alert('新增失敗')
+      }
+    })
+    .catch(error => {
+      console.error(error)
+    })
+})
+
+// 監聽取消按鈕的點擊事件
+const confirmCancel = document.getElementById('confirmCancel')
+cancelButton.addEventListener('click', function (event) {
+  event.preventDefault()
+  $('#cancelWarningModal').modal('show')
+})
+confirmCancel.addEventListener('click', function () {
+  $('#cancelWarningModal').modal('hide')
+  window.location.href = '/exerciseLists'
+})
 
 // 顯示提示內容
 document.addEventListener('DOMContentLoaded', function () {
