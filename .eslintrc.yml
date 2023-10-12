@@ -11,3 +11,5 @@ rules:
   arrow-parens:
     - warn
     - as-needed
+globals:
+  FullCalendar: readonly

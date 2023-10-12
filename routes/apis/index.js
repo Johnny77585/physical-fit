@@ -5,6 +5,7 @@ const passport = require('../../config/passport')
 const userController = require('../../controllers/apis/user-controller')
 const exerciseController = require('../../controllers/apis/exercise-controller')
 const exerciseListController = require('../../controllers/apis/exerciseList-controller')
+const listDateController = require('../../controllers/apis/listDate-controller')
 
 const upload = require('../../middleware/multer')
 
@@ -21,6 +22,8 @@ router.post('/exerciselist', exerciseListController.postExerciseList)
 router.put('/exerciselist/:listId', exerciseListController.putExerciseList)
 router.put('/exerciselistDetail/:listId', exerciseListController.putExerciseListDetail)
 router.delete('/exerciselists/:listId', exerciseListController.deleteExerciseList)
+
+router.get('/lists', listDateController.getLists)
 
 router.use('/', apiErrorHandler)
 module.exports = router

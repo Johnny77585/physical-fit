@@ -13,8 +13,9 @@ module.exports = (sequelize, DataTypes) => {
       List.belongsTo(models.User, { foreignKey: 'userId' })
       List.hasMany(models.ExerciseList, { foreignKey: 'listId' })
       List.belongsToMany(models.Date, {
-        through: models.ListDate,
+        through: 'ListDate',
         foreignKey: 'listId',
+        otherKey: 'dateId',
         as: 'ListedDates'
       })
     }
