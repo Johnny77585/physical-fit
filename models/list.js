@@ -22,7 +22,8 @@ module.exports = (sequelize, DataTypes) => {
   }
   List.init({
     name: DataTypes.STRING,
-    userId: DataTypes.INTEGER
+    userId: DataTypes.INTEGER,
+    isCopied: DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'List',

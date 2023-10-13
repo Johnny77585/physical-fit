@@ -6,21 +6,21 @@ module.exports = {
       {
         name: '胸部菜單',
         user_id: 1,
-        isCopied: false,
+        is_copied: false,
         created_at: new Date(),
         updated_at: new Date()
       },
       {
         name: '腿部菜單',
         user_id: 1,
-        isCopied: false,
+        is_copied: false,
         created_at: new Date(),
         updated_at: new Date()
       },
       {
         name: '手部菜單',
         user_id: 3,
-        isCopied: false,
+        is_copied: false,
         created_at: new Date(),
         updated_at: new Date()
       }
@@ -31,21 +31,21 @@ module.exports = {
       {
         name: '胸部菜單',
         user_id: 1,
-        isCopied: true,
+        is_copied: true,
         created_at: new Date(),
         updated_at: new Date()
       },
       {
         name: '腿部菜單',
         user_id: 1,
-        isCopied: true,
+        is_copied: true,
         created_at: new Date(),
         updated_at: new Date()
       },
       {
         name: '手部菜單',
         user_id: 3,
-        isCopied: true,
+        is_copied: true,
         created_at: new Date(),
         updated_at: new Date()
       }
