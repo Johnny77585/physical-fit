@@ -16,6 +16,24 @@ module.exports = {
         updated_at: new Date()
       },
       {
+        list_id: 4,
+        date_id: 3,
+        created_at: new Date(),
+        updated_at: new Date()
+      },
+      {
+        list_id: 5,
+        date_id: 1,
+        created_at: new Date(),
+        updated_at: new Date()
+      },
+      {
+        list_id: 6,
+        date_id: 2,
+        created_at: new Date(),
+        updated_at: new Date()
+      },
+      {
         list_id: 3,
         date_id: 3,
         created_at: new Date(),

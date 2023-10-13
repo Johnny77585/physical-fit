@@ -4,17 +4,17 @@ module.exports = {
   async up (queryInterface, Sequelize) {
     await queryInterface.bulkInsert('Dates', [
       {
-        date: '2023-09-20',
+        date: '2023-10-20',
         created_at: new Date(),
         updated_at: new Date()
       },
       {
-        date: '2023-09-21',
+        date: '2023-10-21',
         created_at: new Date(),
         updated_at: new Date()
       },
       {
-        date: '2023-09-22',
+        date: '2023-10-22',
         created_at: new Date(),
         updated_at: new Date()
       }
