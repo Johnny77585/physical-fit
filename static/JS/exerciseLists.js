@@ -5,7 +5,8 @@ async function getExerciseLists () {
   const response = await fetch(`api/exerciselists/${listId}`)
   const lists = await response.json()
   const displayedListExercises = {}
-  lists.forEach(list => {
+  const filteredLists = lists.filter(list => list.isCopied === 0)
+  filteredLists.forEach(list => {
     const listId = list.id
     if (!displayedListExercises[listId]) {
       displayedListExercises[listId] = []
@@ -19,23 +20,29 @@ async function getExerciseLists () {
       const listName = lists.find(list => list.id === parseInt(listId)).name
       listCards.innerHTML += `
         <div class="card mb-3" style="max-width: 18rem;">
-        <div class="card-body text-primary">
-        <div class="d-flex justify-content-between align-items-center">
-        <h5 class="card-title">${lists.find(list => list.id === parseInt(listId)).name}</h5>
-        <div class="btn-group">
-        <button type="button" class="btn btn-success btn-sm edit-list" data-list-id="${listId}" data-bs-toggle="modal" data-bs-target="#editExerciseListModal">修改</button>
-        <button type="button" class="btn btn-danger btn-sm delete-list" data-list-id="${listId}" data-exercise-name="${listName}">刪除</button>
+          <div class="card-body text-primary">
+            <div class="d-flex justify-content-between align-items-center">
+            <h5 class="card-title">${lists.find(list => list.id === parseInt(listId)).name}</h5>
+              <div class="btn-group">
+              <button type="button" class="btn btn-success btn-sm edit-list" data-list-id="${listId}" data-bs-toggle="modal" data-bs-target="#editExerciseListModal">修改</button>
+              <button type="button" class="btn btn-danger btn-sm delete-list" data-list-id="${listId}" data-exercise-name="${listName}">刪除</button>
+              </div>
+            </div>
+            <p class="card-text">${exerciseIdList}</p>
+            <button type="button" class="btn btn-success btn-sm edit-list" data-list-id="${listId}" data-bs-toggle="modal" data-bs-target="#dateModal" style="position: absolute; bottom: 5%; right: 5%;">+</button>
+          </div>
         </div>
-        </div>
-        <p class="card-text">${exerciseIdList}</p>
-        </div>
-        </div>
-        
         `
     }
   }
 }
 getExerciseLists()
+
+// 使用flatpickr
+flatpickr('#datePicker', {
+  dateFormat: 'Y-m-d',
+  locale: 'zh_tw'
+})
 
 // modal新增exerciseList
 const submitButton = document.getElementById('saveList')

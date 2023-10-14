@@ -13,3 +13,4 @@ rules:
     - as-needed
 globals:
   FullCalendar: readonly
+  flatpickr: 'readonly'
