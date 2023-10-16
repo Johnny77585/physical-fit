@@ -1,4 +1,5 @@
 // 取得exerciseList內容
+getExerciseLists()
 async function getExerciseLists () {
   const listCards = document.querySelector('.listContent .row')
   const listId = null
@@ -29,25 +30,55 @@ async function getExerciseLists () {
               </div>
             </div>
             <p class="card-text">${exerciseIdList}</p>
-            <button type="button" class="btn btn-success btn-sm edit-list" data-list-id="${listId}" data-bs-toggle="modal" data-bs-target="#dateModal" style="position: absolute; bottom: 5%; right: 5%;">+</button>
+            <button type="button" class="btn btn-success btn-sm add-date" data-list-id="${listId}" data-bs-toggle="modal" data-bs-target="#dateModal" style="position: absolute; bottom: 5%; right: 5%;">+</button>
           </div>
         </div>
         `
     }
   }
 }
-getExerciseLists()
 
 // 使用flatpickr
-flatpickr('#datePicker', {
-  dateFormat: 'Y-m-d',
+const datePicker = flatpickr('#datePicker', {
+  dateFormat: 'm/d/Y', // 原始日期格式为月/日/年
+  altInput: true,
+  altFormat: 'Y-m-d', // 设置备用输入框的日期格式为年-月-日
   locale: 'zh_tw'
+})
+
+// modal加入日程
+const saveDateButton = document.getElementById('saveDateButton')
+saveDateButton.addEventListener('click', function (event) {
+  event.preventDefault()
+  const listId = event.target.getAttribute('data-list-id')
+  const formattedDate = datePicker.altInput.value
+  const data = {
+    date: formattedDate,
+    listId
+  }
+  fetch('/api/lists', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  })
+    .then(response => {
+      if (response.ok) {
+        localStorage.setItem('successMessage', '加入成功')
+        window.location.href = '/exerciseLists'
+      } else {
+        alert('新增失敗')
+      }
+    })
+    .catch(error => {
+      console.error('API error:', error)
+      alert('發生錯誤，請稍後再試。')
+    })
 })
 
 // modal新增exerciseList
 const submitButton = document.getElementById('saveList')
-const editListButton = document.getElementById('editListButton')
-const cancelButton = document.getElementById('cancelButton')
 submitButton.addEventListener('click', function (event) {
   event.preventDefault()
 
@@ -75,6 +106,7 @@ submitButton.addEventListener('click', function (event) {
 })
 
 // 產生修改菜單的modal
+const editListButton = document.getElementById('editListButton')
 document.addEventListener('click', async function (event) {
   if (event.target.classList.contains('edit-list')) {
     const listId = event.target.getAttribute('data-list-id')
@@ -108,6 +140,10 @@ document.addEventListener('click', async function (event) {
     const listId = event.target.getAttribute('data-list-id')
     const exerciseName = event.target.getAttribute('data-exercise-name')
     confirmDelete(exerciseName, listId)
+  // 綁定加入日程button的data-list-id
+  } else if (event.target.classList.contains('add-date')) {
+    const listId = event.target.getAttribute('data-list-id')
+    saveDateButton.setAttribute('data-list-id', listId)
   }
 })
 
@@ -327,7 +363,7 @@ function createAddButton (exerciseListId) {
   addButton.type = 'button'
   addButton.id = 'addRowButton'
   addButton.setAttribute('data-exercise-detail-id', exerciseListId)
-  addButton.classList.add('btn', 'btn-outline-info')
+  addButton.classList.add('btn', 'btn-outline-info', 'add-row')
   addButton.textContent = '+新增一行'
 
   addButtonContainer.appendChild(addButton) // 添加到 addButtonContainer 中
@@ -338,7 +374,7 @@ function createAddButton (exerciseListId) {
 // 產生一行空白輸入框
 document.getElementById('editListForm').addEventListener('click', event => {
   const target = event.target
-  if (target.classList.contains('btn')) {
+  if (target.classList.contains('add-row')) {
     createInputRow(event)
   }
 })
@@ -414,6 +450,7 @@ editListButton.addEventListener('click', function (event) {
 
 // 監聽取消按鈕的點擊事件
 const confirmCancel = document.getElementById('confirmCancel')
+const cancelButton = document.getElementById('cancelButton')
 cancelButton.addEventListener('click', function (event) {
   event.preventDefault()
   $('#cancelWarningModal').modal('show')
