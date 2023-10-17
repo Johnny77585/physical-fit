@@ -94,3 +94,21 @@
 .fc{
   width: 95%
 }
+
+.fc-scrollgrid{
+  border: 1px solid #ccc;
+}
+
+.fc-dayGridMonth-view .fc-day {
+  border: 1px solid #724810;
+}
+
+.fc-rowgroup-outer {
+  border: 2px solid red;
+
+}
+.fc-view-harness {
+  border: 2px solid #5e0e0e;
+  border-radius: 5px;
+  padding: 10px;
+}

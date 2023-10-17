@@ -10,6 +10,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.removeColumn('Lists', 'isCopied')
+    return queryInterface.removeColumn('Lists', 'is_copied')
   }
 }
