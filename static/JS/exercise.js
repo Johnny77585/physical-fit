@@ -130,12 +130,14 @@ async function populateExerciseListOptions () {
   try {
     const exerciseLists = await getExerciseList()
     exerciseLists.forEach(list => {
-      if (!addedOptions[list.name]) {
-        const option = document.createElement('option')
-        option.value = list.id
-        option.textContent = list.name
-        listSelect.appendChild(option)
-        addedOptions[list.name] = true
+      if (list.isCopied === 0) {
+        if (!addedOptions[list.name]) {
+          const option = document.createElement('option')
+          option.value = list.id
+          option.textContent = list.name
+          listSelect.appendChild(option)
+          addedOptions[list.name] = true
+        }
       }
     })
   } catch (error) {
